@@ -12,7 +12,7 @@ module.exports = function search(session, id) {
     Store
         .searchId(id)
         .then(function (job) {
-            msg = new builder.Message(session).text(`Hallo ${job.MieterName}, Ihr Termin ist am ${job.TerminDatum_relativ}, es geht um folgenden Schaden: ${job.Schaden}`);
+            msg = new builder.Message(session).text(`Hallo ${job.MieterName}, Ihr Termin ist am ${job.TerminDatum_relativ}, es geht um folgenden Schaden: ${job.Inventar }${job.Schaden}`);
             session.send(msg);
         }).catch(function(id) {
             msg = new builder.Message(session).text(`Leider konnten wir keinen Auftrag mit der Auftragsnummer ${auftragsnummer} finden.`);

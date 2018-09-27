@@ -36,7 +36,7 @@ var bot = new builder.UniversalBot(connector, [
     function (session, results) {
         session.dialogData.ID = results.response;
         var job = getJob(`${session.dialogData.ID}`);
-        session.send(job.MieterName);
+        session.send(`Hallo ${job.MieterName}, ihr Termin ist am ${job.TerminDatum_absolut} und ihr Schaden ist: ${job.Inventar} ${job.Schaden}`);
         session.beginDialog('askForMore')
     },
     function (session) {
@@ -60,12 +60,7 @@ var bot = new builder.UniversalBot(connector, [
         }
     ]);
 
-    // msg = new builder.Message(session).addAttachment(idCard);
-    // session.send(msg);
-
-    //bot.dialog('id-search', require('./id-search'));
-
-function getJob(id) {
+    function getJob(id) {
     var jobAuftrag;
         for (var key in data) {
             if (data.hasOwnProperty(key)) {
