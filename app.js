@@ -3,6 +3,9 @@ var builder = require('botbuilder');
 var AdaptiveCards = require("adaptivecards");
 var confirmed = true;
 
+var idCard = require("./cards/id-card.json");
+var selectionCard = require("./cards/selection-card.json");
+
 // Setup Restify Server
 var server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, function () {
@@ -26,78 +29,8 @@ var bot = new builder.UniversalBot(connector, function (session) {
         var confirmed = false;
         return;   
     }
-    var card = {
-        'contentType': 'application/vnd.microsoft.card.adaptive',
-        'content': {
-            '$schema': 'http://adaptivecards.io/schemas/adaptive-card.json',
-            'type': 'AdaptiveCard',
-            'version': '1.0',
-            'body': [
-                {
-                    'type': 'Container',
-                    'speak': '<s>Hi!</s><s>Bitte geben Sie ihre Auftragsnummer ein, damit wir ihnen weiter helfen können.</s>',
-                    'items': [
-                        {
-                            'type': 'ColumnSet',
-                            'columns': [
-                                {
-                                    'type': 'Column',
-                                    'size': 'stretch',
-                                    'items': [
-                                        {
-                                            'type': 'TextBlock',
-                                            'text': 'Hi!',
-                                            'weight': 'bolder',
-                                            'isSubtle': true
-                                        },
-                                        {
-                                            'type': 'TextBlock',
-                                            'text': 'Bitte geben Sie ihre Auftragsnummer ein, damit wir ihnen weiter helfen können.',
-                                            'wrap': true
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ],
-            'actions': [
-                {
-                    'type': 'Action.ShowCard',
-                    'title': 'Auftragsnummer',
-                    'speak': '<s>Auftragsnummer</s>',
-                    'card': {
-                        'type': 'AdaptiveCard',
-                        'body': [
-                            {
-                                'type': 'TextBlock',
-                                'text': 'Bitte geben Sie ihre Auftragsnummer ein'
-                            },
-                            {
-                                'type': 'Input.Text',
-                                'id': 'id',
-                                'speak': '<s>Bitte geben Sie ihre Auftragsnummer ein</s>',
-                                'placeholder': 'QR-127564',
-                                'style': 'text'
-                            },
-                        ],
-                        'actions': [
-                            {
-                                'type': 'Action.Submit',
-                                'title': 'Eingabe',
-                                'speak': '<s>Eingabe</s>',
-                                'data': {
-                                    'type': 'id'
-                                }
-                            }
-                        ]
-                    }
-                },
-            ]
-        }
-    };
-    var msg = new builder.Message(session).addAttachment(card);
+
+    var msg = new builder.Message(session).addAttachment(idCard);
     session.send(msg);    
 });
 bot.dialog('id-search', require('./id-search'));
