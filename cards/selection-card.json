@@ -40,7 +40,7 @@
                         "title": "Storno",
                         "speak": "<s>Storno</s>",
                         "data": {
-                            "type": "id"
+                            "type": "delete"
                         }
                     },
                     {
@@ -48,7 +48,7 @@
                         "title": "Verschieben",
                         "speak": "<s>Verschieben</s>",
                         "data": {
-                            "type": "id"
+                            "type": "move"
                         }
                     },
                     {
@@ -56,7 +56,7 @@
                         "title": "Foto",
                         "speak": "<s>Foto</s>",
                         "data": {
-                            "type": "id"
+                            "type": "picture"
                         }
                     }
                 ]

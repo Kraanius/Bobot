@@ -1,9 +1,7 @@
 var restify = require('restify');
 var builder = require('botbuilder');
 var AdaptiveCards = require("adaptivecards");
-var confirmed = true;
 
-var Promise = require('bluebird');
 var data = require('./data.json');
 
 var idCard = require("./cards/id-card.json");
@@ -55,7 +53,11 @@ var bot = new builder.UniversalBot(connector, [
 
     bot.dialog('askForMore', [
         function (session) {
-            session.send("Weiter gehts");
+            var msg = new builder.Message(session).addAttachment(selectionCard);
+            session.send(msg);
+            console.log(selectionCard);
+            processSubmitAction(session, session.message.value);
+            
             session.endDialog();
         }
     ]);
@@ -74,18 +76,29 @@ var bot = new builder.UniversalBot(connector, [
 }
 
 function processSubmitAction(session, value) {
-    var defaultErrorMessage = 'Bitte geben Sie eine Auftragsnummer ein';
     switch (value.type) {
-        case 'id':
-            if(value.id !== '') {
-                session.beginDialog('id-search', value);
-            } else {
-                session.send(defaultErrorMessage);
-            }
+        case 'delete':
+            session.beginDialog('deleteAppointment');
         break;
-        default:
-            // A form data was received, invalid or incomplete since the previous validation did not pass
-            session.send(defaultErrorMessage);
+        case 'move':
+            session.beginDialog('moveAppointment');
+        break;
+        case 'picture':
+            session.beginDialog('takePicture');
+        break;
     }
-    
 }
+
+bot.dialog('deleteAppointment', [
+    function (session) {
+        session.send("Termin wurde gelöscht!");
+        session.endDialog();
+    }
+]);
+
+bot.dialog('moveAppointment', [
+    function (session) {
+        session.send("Termin wurde verschoben!");
+        session.endDialog();
+    }
+]);
