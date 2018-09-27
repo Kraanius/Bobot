@@ -27,38 +27,47 @@ server.post('/api/messages', connector.listen());
 var inMemoryStorage = new builder.MemoryBotStorage();
 
 var bot = new builder.UniversalBot(connector, [
+
     function (session) {
+        console.log("#####2");
         session.send("Wilkommen.");
         session.beginDialog('askForID');
     },
     function (session, results) {
+        console.log("#####3");
         session.dialogData.ID = results.response;
         var job = getJob(`${session.dialogData.ID}`);
         session.send(`Hallo ${job.MieterName}, ihr Termin ist am ${job.TerminDatum_absolut} und ihr Schaden ist: ${job.Inventar} ${job.Schaden}`);
-        session.beginDialog('askForMore')
+        //session.beginDialog('askForMore');
+        var msg = new builder.Message(session).addAttachment(selectionCard);
+        session.send(msg);
+        
     },
     function (session) {
         //session.send("Weiter gehts");
+        console.log("#####4");
+        console.log(session.message);
+        
     }
         ]).set('storage', inMemoryStorage); // Register in-memory storage 
 
     bot.dialog('askForID', [
         function (session) {
             builder.Prompts.text(session, "Bitte Auftragsnummer eingeben");
+            console.log("#####5");
         },
         function (session, results) {
             session.endDialogWithResult(results);
+            console.log("#####6");
         }
     ]);
 
     bot.dialog('askForMore', [
         function (session) {
-            var msg = new builder.Message(session).addAttachment(selectionCard);
-            session.send(msg);
-            console.log(selectionCard);
-            processSubmitAction(session, session.message.value);
-            
-            session.endDialog();
+            console.log("#####7");
+            //var msg = new builder.Message(session).addAttachment(selectionCard);
+            // session.send(msg);
+            // session.endDialog();
         }
     ]);
 
