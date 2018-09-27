@@ -1,83 +1,121 @@
-/*-----------------------------------------------------------------------------
-A simple Language Understanding (LUIS) bot for the Microsoft Bot Framework. 
------------------------------------------------------------------------------*/
-
 var restify = require('restify');
 var builder = require('botbuilder');
-var botbuilder_azure = require("botbuilder-azure");
+var AdaptiveCards = require("adaptivecards");
+var confirmed = true;
 
 // Setup Restify Server
 var server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, function () {
-   console.log('%s listening to %s', server.name, server.url); 
+//    console.log('%s listening to %s', server.name, server.url); 
 });
-  
+
 // Create chat connector for communicating with the Bot Framework Service
 var connector = new builder.ChatConnector({
     appId: process.env.MicrosoftAppId,
-    appPassword: process.env.MicrosoftAppPassword,
-    openIdMetadata: process.env.BotOpenIdMetadata 
+    appPassword: process.env.MicrosoftAppPassword
 });
 
 // Listen for messages from users 
 server.post('/api/messages', connector.listen());
 
-/*----------------------------------------------------------------------------------------
-* Bot Storage: This is a great spot to register the private state storage for your bot. 
-* We provide adapters for Azure Table, CosmosDb, SQL Azure, or you can implement your own!
-* For samples and documentation, see: https://github.com/Microsoft/BotBuilder-Azure
-* ---------------------------------------------------------------------------------------- */
+// Receive messages from the user and respond by echoing each message back (prefixed with 'You said:')
 
-var tableName = 'botdata';
-var azureTableClient = new botbuilder_azure.AzureTableClient(tableName, process.env['AzureWebJobsStorage']);
-var tableStorage = new botbuilder_azure.AzureBotStorage({ gzipData: false }, azureTableClient);
-
-// Create your bot with a function to receive messages from the user
-// This default message handler is invoked if the user's utterance doesn't
-// match any intents handled by other dialogs.
-var bot = new builder.UniversalBot(connector, function (session, args) {
-    session.send('You reached the default message handler. You said \'%s\'.', session.message.text);
+var bot = new builder.UniversalBot(connector, function (session) {
+    if (session.message && session.message.value) {
+        processSubmitAction(session, session.message.value);
+        var confirmed = false;
+        return;   
+    }
+    var card = {
+        'contentType': 'application/vnd.microsoft.card.adaptive',
+        'content': {
+            '$schema': 'http://adaptivecards.io/schemas/adaptive-card.json',
+            'type': 'AdaptiveCard',
+            'version': '1.0',
+            'body': [
+                {
+                    'type': 'Container',
+                    'speak': '<s>Hi!</s><s>Bitte geben Sie ihre Auftragsnummer ein, damit wir ihnen weiter helfen können.</s>',
+                    'items': [
+                        {
+                            'type': 'ColumnSet',
+                            'columns': [
+                                {
+                                    'type': 'Column',
+                                    'size': 'stretch',
+                                    'items': [
+                                        {
+                                            'type': 'TextBlock',
+                                            'text': 'Hi!',
+                                            'weight': 'bolder',
+                                            'isSubtle': true
+                                        },
+                                        {
+                                            'type': 'TextBlock',
+                                            'text': 'Bitte geben Sie ihre Auftragsnummer ein, damit wir ihnen weiter helfen können.',
+                                            'wrap': true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            'actions': [
+                {
+                    'type': 'Action.ShowCard',
+                    'title': 'Auftragsnummer',
+                    'speak': '<s>Auftragsnummer</s>',
+                    'card': {
+                        'type': 'AdaptiveCard',
+                        'body': [
+                            {
+                                'type': 'TextBlock',
+                                'text': 'Bitte geben Sie ihre Auftragsnummer ein'
+                            },
+                            {
+                                'type': 'Input.Text',
+                                'id': 'id',
+                                'speak': '<s>Bitte geben Sie ihre Auftragsnummer ein</s>',
+                                'placeholder': 'QR-127564',
+                                'style': 'text'
+                            },
+                        ],
+                        'actions': [
+                            {
+                                'type': 'Action.Submit',
+                                'title': 'Eingabe',
+                                'speak': '<s>Eingabe</s>',
+                                'data': {
+                                    'type': 'id'
+                                }
+                            }
+                        ]
+                    }
+                },
+            ]
+        }
+    };
+    var msg = new builder.Message(session).addAttachment(card);
+    session.send(msg);    
 });
+bot.dialog('id-search', require('./id-search'));
 
-bot.set('storage', tableStorage);
 
-// Make sure you add code to validate these fields
-var luisAppId = process.env.LuisAppId;
-var luisAPIKey = process.env.LuisAPIKey;
-var luisAPIHostName = process.env.LuisAPIHostName || 'westus.api.cognitive.microsoft.com';
-
-const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v2.0/apps/' + luisAppId + '?subscription-key=' + luisAPIKey;
-
-// Create a recognizer that gets intents from LUIS, and add it to the bot
-var recognizer = new builder.LuisRecognizer(LuisModelUrl);
-bot.recognizer(recognizer);
-
-// Add a dialog for each intent that the LUIS app recognizes.
-// See https://docs.microsoft.com/en-us/bot-framework/nodejs/bot-builder-nodejs-recognize-intent-luis 
-bot.dialog('GreetingDialog',
-    (session) => {
-        session.send('You reached the Greeting intent. You said \'%s\'.', session.message.text);
-        session.endDialog();
+function processSubmitAction(session, value) {
+    var defaultErrorMessage = 'Bitte geben Sie eine Auftragsnummer ein';
+    switch (value.type) {
+        case 'id':
+            if(value.id !== '') {
+                session.beginDialog('id-search', value);
+            } else {
+                session.send(defaultErrorMessage);
+            }
+        break;
+        default:
+            // A form data was received, invalid or incomplete since the previous validation did not pass
+            session.send(defaultErrorMessage);
     }
-).triggerAction({
-    matches: 'Greeting'
-})
-
-bot.dialog('HelpDialog',
-    (session) => {
-        session.send('You reached the Help intent. You said \'%s\'.', session.message.text);
-        session.endDialog();
-    }
-).triggerAction({
-    matches: 'Help'
-})
-
-bot.dialog('CancelDialog',
-    (session) => {
-        session.send('You reached the Cancel intent. You said \'%s\'.', session.message.text);
-        session.endDialog();
-    }
-).triggerAction({
-    matches: 'Cancel'
-})
-
+    
+}

@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "adaptivecards": "^1.0.0",
+    "bluebird": "^3.5.2",
     "botbuilder": "^3.13.1",
     "botbuilder-azure": "^3.0.4",
     "restify": "^5.0.0"
