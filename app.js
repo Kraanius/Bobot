@@ -134,19 +134,6 @@ var bot = new builder.UniversalBot(connector, [
         }
     ]);
 
-    bot.dialog('askForMore',
-        function (session) {
-            console.log('###6');
-            if(session.message && session.message.value) {
-                console.log('###7');
-                console.log(session.message.value)
-                processSubmitAction(session, session.message.value);
-                return;
-            }
-            var msg = new builder.Message(session).addAttachment(selectionCard);
-            session.send(msg);
-        })
-
 function getJob(id) {
     var jobAuftrag = null;
         for (var key in data) {
