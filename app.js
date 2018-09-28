@@ -16,7 +16,6 @@ var dateCard = require("./cards/dateCard.json");
 // Setup Restify Server
 var server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, function () {
-//    console.log('%s listening to %s', server.name, server.url); 
 });
 
 // Create chat connector for communicating with the Bot Framework Service
@@ -39,9 +38,7 @@ var bot = new builder.UniversalBot(connector, [
         session.beginDialog('askForID');
     },
     function (session, results) {
-        console.log('###2', job); 
         if(job !== null) {
-            console.log("###3")
             var damageCard = {
                 "contentType": "application/vnd.microsoft.card.adaptive",
                 "content": {
@@ -93,7 +90,7 @@ var bot = new builder.UniversalBot(connector, [
                                         "value": job.TerminDatum_absolut
                                     },
                                     {
-                                        "title": "Schaden:",
+                                        "title": "Schaden",
                                         "value": job.Inventar + " " + job.Schaden
                                     }
                                 ]
@@ -107,49 +104,47 @@ var bot = new builder.UniversalBot(connector, [
             session.send(msg);
             session.beginDialog('askForMore');
         }
+   
+            
+        
     }
 ]).set('storage', inMemoryStorage); // Register in-memory storage 
 
-bot.dialog('askForID', [
-    function (session) {
-        console.log('###4');
-        // var msg = new builder.Message(session).addAttachment(idCard);
-        // session.send(msg);   
-        builder.Prompts.number(session, "Bitte geben Sie ihre Auftragsnummer ein.");
-    },
-    function (session, results) {
-        console.log('###5');
-        session.dialogData.ID = results.response;
-        job = getJob(`${session.dialogData.ID}`);
-        if(job !== null){
-            session.endDialogWithResult(results);
-        } else {
-            var msg = "Wir können diesen Auftrag leider nicht finden.";
-            session.send(msg);
-            session.beginDialog('askForID');
+    bot.dialog('askForID', [
+        function (session) {
+            // var msg = new builder.Message(session).addAttachment(idCard);
+            // session.send(msg);   
+            builder.Prompts.number(session, "Bitte geben Sie ihre Auftragsnummer ein.");
+        },
+        function (session, results) {
+            session.dialogData.ID = results.response;
+            job = getJob(`${session.dialogData.ID}`);
+            if(job !== null){
+                session.endDialogWithResult(results);
+            } else {
+                var msg = "Wir können diesen Auftrag leider nicht finden.";
+                session.send(msg);
+                session.beginDialog('askForID');
+            }
         }
-        
-    }
-]);
+    ]);
 
 function getJob(id) {
     var jobAuftrag = null;
-    for (var key in data) {
-        if (data.hasOwnProperty(key)) {
-            var job = data[key]
-            if(job.AuftragNr === id) {
-                if(job.TerminStatus !== 'storniert' ){
-                    jobAuftrag = job
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+                var job = data[key]
+                if(job.AuftragNr === id) {
+                    if(job.TerminStatus !== 'storniert' ){
+                        jobAuftrag = job
+                    }
                 }
-                
             }
         }
-    }
-    return jobAuftrag;
+        return jobAuftrag;
 }
 
 function deleteJob(id) {
-    console.log('###11', id);
     for (var key in data) {
         if (data.hasOwnProperty(key)) {
             var job = data[key]
@@ -159,12 +154,12 @@ function deleteJob(id) {
             }
         }
     }
-    console.log("###1000", data)
     let data2 = JSON.stringify(data, null, 2);
     fs.writeFile('data.json', data2, (err) => {  
         if (err) throw err;
     });
 }
+
 
 function processSubmitAction(session, value) {
     switch (value.type) {
@@ -203,7 +198,7 @@ bot.dialog('moveAppointment', [
             return;
         }
         var msg = new builder.Message(session).addAttachment(dateCard);
-        session.send(msg);  
+        session.send(msg); 
     }
 ]);
 
@@ -252,23 +247,15 @@ bot.dialog('takePicture', [
                 .then(function (response) {
                     // Convert buffer into string then parse the JSON string to object
                     var jsonObj = JSON.parse(response.toString('utf8'));
-                    console.log("JSONOBJ: ###### " + JSON.stringify(jsonObj));
                     var topPrediction = jsonObj.predictions[0];
         
                     // make sure we only get confidence level with 0.80 and above. But you can adjust this depending on your need
                     if (topPrediction.probability >= 0.70) {
                         session.send(`Ich habe folgendes erkannt: ${topPrediction.tagName}`);
-                        var check = checkImage(topPrediction.tagName);
-                        if(check) {
-                            session.send(`Wir haben das Bild zu deinem Schaden mit der Auftragsnummer ${job.AuftragNr} hinzugefügt`);
-                        } else {
-                            session.send('Dieses Bild passt nicht zu Ihrem Schaden bitte kontaktieren Sie unsere Support-Hotline.');
-                        }
                     } else {
                         session.send('Hmm, ich weiß nicht, was das ist :(');
                     }
                 }).catch(function (error) {
-                    console.log(error);
                     session.send('Oops, there\'s something wrong with processing the image. Please try again.');
                 });
         
@@ -276,6 +263,8 @@ bot.dialog('takePicture', [
             session.send('Ich habe leider kein Bild erhalten');
         }
 }]);
+
+
 
 function changeDateInJson(date){
 for (var key in data) {
@@ -292,13 +281,4 @@ fs.writeFile('data.json', data3, (err) => {
     if (err) throw err;
 });
 return date;
-}
-
-function checkImage(imgName) {
-    let check = false;
-            if(job.Inventar === imgName) {
-                check = true;
-            }
-    console.log("#08976", check);
-    return check;
 }
