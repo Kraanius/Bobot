@@ -1,0 +1,65 @@
+{
+	"contentType": "application/vnd.microsoft.card.adaptive",
+	"content": {
+	"$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+	"type": "AdaptiveCard",
+	"version": "1.0",
+	"body": [
+		{
+			"type": "Container",
+			"items": [
+				{
+					"type": "TextBlock",
+					"text": "Auftragsnummer",
+					"weight": "bolder",
+					"size": "medium"
+				},
+				{
+                    "type": "ImageSet",
+                    "imageSize": "medium",
+                    "images": [
+                        {
+                            "type": "Image",
+                            "url": "http://contososcubabot.azurewebsites.net/assets/steak.jpg"
+                        },
+                        {
+                            "type": "Image",
+                            "url": "http://contososcubabot.azurewebsites.net/assets/chicken.jpg"
+                        },
+                        {
+                            "type": "Image",
+                            "url": "http://contososcubabot.azurewebsites.net/assets/tofu.jpg"
+                        }
+                    ]
+                }
+			]
+		},
+		{
+			"type": "Container",
+			"items": [
+				{
+					"type": "FactSet",
+					"facts": [
+						{
+							"title": "Board:",
+							"value": "Adaptive Card"
+						},
+						{
+							"title": "List:",
+							"value": "Backlog"
+						},
+						{
+							"title": "Assigned to:",
+							"value": "Matt Hidinger"
+						},
+						{
+							"title": "Due date:",
+							"value": "Not set"
+						}
+					]
+				}
+			]
+		}
+	]
+}
+}

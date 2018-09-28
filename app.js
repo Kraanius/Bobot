@@ -3,6 +3,7 @@ var builder = require('botbuilder');
 var AdaptiveCards = require("adaptivecards");
 
 var data = require('./data.json');
+var job;
 
 var idCard = require("./cards/id-card.json");
 var selectionCard = require("./cards/selection-card.json");
@@ -28,39 +29,108 @@ var inMemoryStorage = new builder.MemoryBotStorage();
 
 var bot = new builder.UniversalBot(connector, [
     function (session) {
-        session.send("Wilkommen.");
+        console.log('###1');
+        session.send("Wilkommen beim B&O Helpdesk");
         session.beginDialog('askForID');
     },
     function (session, results) {
+        console.log('###2');
         session.dialogData.ID = results.response;
-        var job = getJob(`${session.dialogData.ID}`);
-        session.send(`Hallo ${job.MieterName}, ihr Termin ist am ${job.TerminDatum_absolut} und ihr Schaden ist: ${job.Inventar} ${job.Schaden}`);
+        job = getJob(`${session.dialogData.ID}`);
+        var damageCard = {
+            "contentType": "application/vnd.microsoft.card.adaptive",
+            "content": {
+            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+            "type": "AdaptiveCard",
+            "version": "1.0",
+            "body": [
+                {
+                    "type": "Container",
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "text": "Auftragsnummer: " + job.AuftragNr,
+                            "weight": "bolder",
+                            "size": "medium"
+                        },
+                        {
+                            "type": "ImageSet",
+                            "imageSize": "medium",
+                            "images": [
+                                {
+                                    "type": "Image",
+                                    "url": "http://www.maler-wenzel.de/_res/metall/064_Heizkoerper/IMG_0967.jpg"
+                                },
+                                {
+                                    "type": "Image",
+                                    "url": "http://www.maler-wenzel.de/_res/metall/064_Heizkoerper/IMG_1008.jpg"
+                                },
+                                {
+                                    "type": "Image",
+                                    "url": "http://www.maler-wenzel.de/_res/metall/064_Heizkoerper/IMG_1007.jpg"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "items": [
+                        {
+                            "type": "FactSet",
+                            "facts": [
+                                {
+                                    "title": "Name:",
+                                    "value": job.MieterName
+                                },
+                                {
+                                    "title": "Datum:",
+                                    "value": job.TerminDatum_absolut
+                                },
+                                {
+                                    "title": "Schaden",
+                                    "value": job.Inventar + " " + job.Schaden
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+        }
+        var msg = new builder.Message(session).addAttachment(damageCard);
+        session.send(msg);   
         session.beginDialog('askForMore')
     },
-    function (session) {
-        //session.send("Weiter gehts");
-    }
-        ]).set('storage', inMemoryStorage); // Register in-memory storage 
+]).set('storage', inMemoryStorage); // Register in-memory storage 
 
     bot.dialog('askForID', [
         function (session) {
-            builder.Prompts.text(session, "Bitte Auftragsnummer eingeben");
+            console.log('###4');
+            // var msg = new builder.Message(session).addAttachment(idCard);
+            // session.send(msg);   
+
+            builder.Prompts.text(session, "Bitte geben Sie ihre Auftragsnummer ein.");
         },
         function (session, results) {
+            console.log('###5');
             session.endDialogWithResult(results);
         }
     ]);
 
-    bot.dialog('askForMore', [
+    bot.dialog('askForMore',
         function (session) {
+            console.log('###6');
+            if(session.message && session.message.value) {
+                console.log('###7');
+                console.log(session.message.value)
+                processSubmitAction(session, session.message.value);
+                return;
+            }
             var msg = new builder.Message(session).addAttachment(selectionCard);
-            session.send(msg);
-            console.log(selectionCard);
-            processSubmitAction(session, session.message.value);
-            
-            session.endDialog();
+            session.send(msg);    
         }
-    ]);
+    );
 
     function getJob(id) {
     var jobAuftrag;
@@ -74,6 +144,20 @@ var bot = new builder.UniversalBot(connector, [
         }
         return jobAuftrag;
 }
+
+function deleteJob(id) {
+    console.log('###11', id);
+    for (var key in data) {
+        if (data.hasOwnProperty(key)) {
+            var job = data[key]
+            if(job.AuftragNr === id) {
+                job.TerminStatus = "storniert";
+                console.log('###12', job.TerminStatus);   
+            }
+        }
+    }
+}
+
 
 function processSubmitAction(session, value) {
     switch (value.type) {
@@ -91,7 +175,19 @@ function processSubmitAction(session, value) {
 
 bot.dialog('deleteAppointment', [
     function (session) {
-        session.send("Termin wurde gelöscht!");
+        console.log('###9');
+        builder.Prompts.confirm(session, "Sind Sie sicher, dass sie den Termin löschen wollen?");
+    }, function(session, result) {
+        console.log('###10');
+        console.log(result.response)
+        console.log(job.AuftragNr)
+        if(result.response) {
+            deleteJob(job.AuftragNr)
+            session.send(`Ihr Termin mit der Auftragsnummer ${job.AuftragNr} wurde aus unserem System gelöscht.`);
+        } else {
+            session.send("Termin wurde nicht gelöscht gelöscht!");
+            session.beginDialog('askForMore');
+        }     
         session.endDialog();
     }
 ]);

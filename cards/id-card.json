@@ -1,71 +1,51 @@
 {
         "contentType": "application/vnd.microsoft.card.adaptive",
         "content": {
-            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-            "type": "AdaptiveCard",
-            "version": "1.0",
-            "body": [
-                {
-                    "type": "Container",
-                    "speak": "<s>Hi!</s><s>Bitte geben Sie ihre Auftragsnummer ein, damit wir ihnen weiter helfen können.</s>",
-                    "items": [
-                        {
-                            "type": "ColumnSet",
-                            "columns": [
-                                {
-                                    "type": "Column",
-                                    "size": "stretch",
-                                    "items": [
-                                        {
-                                            "type": "TextBlock",
-                                            "text": "Hi!",
-                                            "weight": "bolder",
-                                            "isSubtle": true
-                                        },
-                                        {
-                                            "type": "TextBlock",
-                                            "text": "Bitte geben Sie ihre Auftragsnummer ein, damit wir ihnen weiter helfen können.",
-                                            "wrap": true
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ],
-            "actions": [
-                {
-                    "type": "Action.ShowCard",
-                    "title": "Auftragsnummer",
-                    "speak": "<s>Auftragsnummer</s>",
-                    "card": {
-                        "type": "AdaptiveCard",
-                        "body": [
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                "type": "AdaptiveCard",
+                "version": "1.0",
+                "body": [
+                    {
+                        "type": "ColumnSet",
+                        "columns": [
                             {
-                                "type": "TextBlock",
-                                "text": "Bitte geben Sie ihre Auftragsnummer ein"
-                            },
-                            {
-                                "type": "Input.Text",
-                                "id": "id",
-                                "speak": "<s>Bitte geben Sie ihre Auftragsnummer ein</s>",
-                                "placeholder": "QR-127564",
-                                "style": "text"
-                            }
-                        ],
-                        "actions": [
-                            {
-                                "type": "Action.Submit",
-                                "title": "Eingabe",
-                                "speak": "<s>Eingabe</s>",
-                                "data": {
-                                    "type": "id"
-                                }
+                                "type": "Column",
+                                "width": 2,
+                                "items": [
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "Auftragsnummer",
+                                        "weight": "bolder",
+                                        "size": "medium"
+                                    },
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "Bitte geben Sie ihre Auftragsnummer ein, sodass wir ihren  Schaden identifizieren können.",
+                                        "size": "medium",
+                                        "wrap": true
+                                    },
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "Auftragsnummer:",
+                                        "wrap": true
+                                    },
+                                    {
+                                        "type": "Input.Text",
+                                        "id": "id"
+                                    }
+                                ]
                             }
                         ]
                     }
-                }
-            ]
+                ],
+                "actions": [
+                    {
+                        "type": "Action.Submit",
+                        "title": "Submit",
+                        "data": {
+                            "type": "id"
+                        }
+                    }
+                ]
         }
     }
