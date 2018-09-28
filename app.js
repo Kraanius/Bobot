@@ -286,15 +286,9 @@ return date;
 
 function checkImage(imgName) {
     let check = false;
-    for (var key in data) {
-        if (data.hasOwnProperty(key)) {
-            var job = data[key]
             if(job.Inventar === imgName) {
                 check = true;
-                break;
             }
-        }
-    }
     console.log("#08976", check);
     return check;
 }
