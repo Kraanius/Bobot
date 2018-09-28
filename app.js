@@ -34,7 +34,7 @@ var inMemoryStorage = new builder.MemoryBotStorage();
 var bot = new builder.UniversalBot(connector, [
 
     function (session) {
-        session.send("Wilkommen beim B&O Helpdesk");
+        session.send("Willkommen beim B&O Helpdesk");
         session.beginDialog('askForID');
     },
     function (session, results) {
