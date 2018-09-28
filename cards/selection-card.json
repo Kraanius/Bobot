@@ -19,6 +19,7 @@
                                             {
                                                 "type": "TextBlock",
                                                 "text": "Worum geht es in Ihrem Anliegen?",
+                                                "wrap": true,
                                                 "weight": "bolder",
                                                 "isSubtle": true
                                             }

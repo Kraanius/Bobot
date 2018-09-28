@@ -67,10 +67,6 @@ var bot = new builder.UniversalBot(connector, [
                                         "type": "Image",
                                         "url": job.Link2
                                     },
-                                    {
-                                        "type": "Image",
-                                        "url": job.Link3
-                                    }
                                 ]
                             }
                         ]
@@ -90,7 +86,7 @@ var bot = new builder.UniversalBot(connector, [
                                         "value": job.TerminDatum_absolut
                                     },
                                     {
-                                        "title": "Schaden",
+                                        "title": "Schaden:",
                                         "value": job.Inventar + " " + job.Schaden
                                     }
                                 ]
