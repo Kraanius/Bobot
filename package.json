@@ -11,7 +11,7 @@
     "needle": "^2.2.4",
     "nodemailer": "^4.6.8",
     "request-promise": "^4.2.2",
-    "restify": "^5.0.0"
+    "restify": "^5.2.1"
   },
   "devDependencies": {
     "request": "^2.81.0",
