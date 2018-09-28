@@ -7,9 +7,9 @@
 	"body": [
 		{
 			"type": "TextBlock",
-			"size": "medium",
-			"text": "Geben Sie ihren gewünschten Termin ein:",
-			"horizontalAlignment": "left"
+			"text": "<s>Geben Sie ihren gewünschten Termin ein:</s>",
+			"horizontalAlignment": "left",
+			"wrap": true
 		},
 		{
 			"type": "Input.Date",

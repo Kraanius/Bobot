@@ -24,7 +24,7 @@
                                             },
                                             {
                                                 "type": "TextBlock",
-                                                "text": "Worum geht es in eurem Anliegen?",
+                                                "text": "Worum geht es in Ihrem Anliegen?",
                                                 "wrap": true
                                             }
                                         ]
