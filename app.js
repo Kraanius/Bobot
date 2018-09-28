@@ -6,7 +6,7 @@ const fs = require('fs');
 var data = require('./data.json');
 var utils = require('./utils.js');
 var customVisionService = require('./customVisionService.js');
-var job = null
+var job = null;
 
 var idCard = require("./cards/id-card.json");
 var selectionCard = require("./cards/selection-card.json");
@@ -38,10 +38,9 @@ var bot = new builder.UniversalBot(connector, [
         session.beginDialog('askForID');
     },
     function (session, results) {
-        console.log('###2');
-        
-        
+        console.log('###2', job); 
         if(job !== null) {
+            console.log("###3")
             var damageCard = {
                 "contentType": "application/vnd.microsoft.card.adaptive",
                 "content": {
@@ -64,15 +63,15 @@ var bot = new builder.UniversalBot(connector, [
                                 "images": [
                                     {
                                         "type": "Image",
-                                        "url": "http://www.maler-wenzel.de/_res/metall/064_Heizkoerper/IMG_0967.jpg"
+                                        "url": job.Link1
                                     },
                                     {
                                         "type": "Image",
-                                        "url": "http://www.maler-wenzel.de/_res/metall/064_Heizkoerper/IMG_1008.jpg"
+                                        "url": job.Link2
                                     },
                                     {
                                         "type": "Image",
-                                        "url": "http://www.maler-wenzel.de/_res/metall/064_Heizkoerper/IMG_1007.jpg"
+                                        "url": job.Link3
                                     }
                                 ]
                             }
@@ -104,11 +103,11 @@ var bot = new builder.UniversalBot(connector, [
             }
             }
             var msg = new builder.Message(session).addAttachment(damageCard);
+            session.send(msg);
+            session.beginDialog('askForMore');
         }
    
-        if(job !== null) {
-            session.beginDialog('askForMore')
-        }
+            
         
     }
 ]).set('storage', inMemoryStorage); // Register in-memory storage 
