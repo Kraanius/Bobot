@@ -8,7 +8,9 @@
     "bluebird": "^3.5.2",
     "botbuilder": "^3.13.1",
     "botbuilder-azure": "^3.0.4",
-    "restify": "^5.0.0"
+    "json-update": "^3.0.0",
+    "restify": "^5.0.0",
+    "update-json-file": "^1.1.1"
   },
   "devDependencies": {
     "request": "^2.81.0",

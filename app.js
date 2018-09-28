@@ -60,15 +60,15 @@ var bot = new builder.UniversalBot(connector, [
                             "images": [
                                 {
                                     "type": "Image",
-                                    "url": "http://www.maler-wenzel.de/_res/metall/064_Heizkoerper/IMG_0967.jpg"
+                                    "url": job.Link1
                                 },
                                 {
                                     "type": "Image",
-                                    "url": "http://www.maler-wenzel.de/_res/metall/064_Heizkoerper/IMG_1008.jpg"
+                                    "url": job.Link2
                                 },
                                 {
                                     "type": "Image",
-                                    "url": "http://www.maler-wenzel.de/_res/metall/064_Heizkoerper/IMG_1007.jpg"
+                                    "url": job.Link3
                                 }
                             ]
                         }
@@ -131,7 +131,7 @@ var bot = new builder.UniversalBot(connector, [
                 return;
             }
             var msg = new builder.Message(session).addAttachment(selectionCard);
-            session.send(msg);    
+            session.send(msg);
 
         }
     );
