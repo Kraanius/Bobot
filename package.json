@@ -8,6 +8,7 @@
     "bluebird": "^3.5.2",
     "botbuilder": "^3.13.1",
     "botbuilder-azure": "^3.0.4",
+    "nodemailer": "^4.6.8",
     "restify": "^5.0.0"
   },
   "devDependencies": {
