@@ -15,7 +15,6 @@ var dateCard = require("./cards/dateCard.json");
 // Setup Restify Server
 var server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, function () {
-//    console.log('%s listening to %s', server.name, server.url); 
 });
 
 // Create chat connector for communicating with the Bot Framework Service
@@ -38,9 +37,7 @@ var bot = new builder.UniversalBot(connector, [
         session.beginDialog('askForID');
     },
     function (session, results) {
-        console.log('###2', job); 
         if(job !== null) {
-            console.log("###3")
             var damageCard = {
                 "contentType": "application/vnd.microsoft.card.adaptive",
                 "content": {
@@ -114,13 +111,11 @@ var bot = new builder.UniversalBot(connector, [
 
     bot.dialog('askForID', [
         function (session) {
-            console.log('###4');
             // var msg = new builder.Message(session).addAttachment(idCard);
             // session.send(msg);   
             builder.Prompts.number(session, "Bitte geben Sie ihre Auftragsnummer ein.");
         },
         function (session, results) {
-            console.log('###5');
             session.dialogData.ID = results.response;
             job = getJob(`${session.dialogData.ID}`);
             if(job !== null){
@@ -149,7 +144,6 @@ function getJob(id) {
 }
 
 function deleteJob(id) {
-    console.log('###11', id);
     for (var key in data) {
         if (data.hasOwnProperty(key)) {
             var job = data[key]
@@ -159,7 +153,6 @@ function deleteJob(id) {
             }
         }
     }
-    console.log("###1000", data)
     let data2 = JSON.stringify(data, null, 2);
     fs.writeFile('data.json', data2, (err) => {  
         if (err) throw err;
@@ -213,8 +206,6 @@ bot.dialog('moveAppointment', [
 bot.dialog('askForMore',
 function (session) {   
     if(session.message && session.message.value) {
-        console.log('###7');
-        console.log(session.message.value)
         processSubmitAction(session, session.message.value);
         return;
     }
@@ -228,7 +219,6 @@ function submitChangeDate(session, value){
 }
 
 bot.dialog('changeDate1',function (session, date) {
-    console.log('###6', date.date);    
     let changedDate = changeDateInJson(date.date)
     session.send(`Ihr Termin wurde auf den ${changedDate} verschoben.`)
     session.endDialog();
@@ -245,7 +235,6 @@ bot.dialog('takePicture', [
                 .then(function (response) {
                     // Convert buffer into string then parse the JSON string to object
                     var jsonObj = JSON.parse(response.toString('utf8'));
-                    console.log("JSONOBJ: ###### " + JSON.stringify(jsonObj));
                     var topPrediction = jsonObj.predictions[0];
         
                     // make sure we only get confidence level with 0.80 and above. But you can adjust this depending on your need
@@ -255,7 +244,6 @@ bot.dialog('takePicture', [
                         session.send('Hmm, ich weiß nicht, was das ist :(');
                     }
                 }).catch(function (error) {
-                    console.log(error);
                     session.send('Oops, there\'s something wrong with processing the image. Please try again.');
                 });
         
