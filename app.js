@@ -4,6 +4,8 @@ var AdaptiveCards = require("adaptivecards");
 var nodemailer = require('nodemailer');
 const fs = require('fs');
 var data = require('./data.json');
+var utils = require('./utils.js');
+var customVisionService = require('./customVisionService.js');
 var job = null
 
 var idCard = require("./cards/id-card.json");
@@ -32,7 +34,6 @@ var inMemoryStorage = new builder.MemoryBotStorage();
 var bot = new builder.UniversalBot(connector, [
 
     function (session) {
-        console.log('###1');
         session.send("Wilkommen beim B&O Helpdesk");
         session.beginDialog('askForID');
     },
@@ -174,12 +175,13 @@ function processSubmitAction(session, value) {
     switch (value.type) {
         case 'delete':
             session.beginDialog('deleteAppointment');
-        break;
+            break;
         case 'move':
             session.beginDialog('moveAppointment');
-        break;
+            break;
         case 'picture':
             session.beginDialog('takePicture');
+            break;
         case 'date':
             session.beginDialog('changeDate');
         break;
@@ -236,6 +238,38 @@ bot.dialog('changeDate1',function (session, date) {
     session.send(`Ihr Termin wurde auf den ${changedDate} verschoben.`)
     session.endDialog();
 });
+
+bot.dialog('takePicture', [
+    function (session) {
+        builder.Prompts.attachment(session, "Bitte laden Sie ihre Bilder hoch");
+    },
+    function(session, result) {
+        if(utils.hasImageAttachment(session)){
+            var stream = utils.getImageStreamFromMessage(session.message); 
+            customVisionService.predict(stream)
+                .then(function (response) {
+                    // Convert buffer into string then parse the JSON string to object
+                    var jsonObj = JSON.parse(response.toString('utf8'));
+                    console.log("JSONOBJ: ###### " + JSON.stringify(jsonObj));
+                    var topPrediction = jsonObj.predictions[0];
+        
+                    // make sure we only get confidence level with 0.80 and above. But you can adjust this depending on your need
+                    if (topPrediction.probability >= 0.80) {
+                        session.send('Ok, ich glaube, dass ist ${topPrediction.tagName}!');
+                    } else {
+                        session.send('Hmm, ich weiß nicht, was das ist :(');
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                    session.send('Oops, there\'s something wrong with processing the image. Please try again.');
+                });
+        
+        } else {
+            session.send('Ich habe leider kein Bild erhalten');
+        }
+}]);
+
+
 
 function changeDateInJson(date){
 for (var key in data) {
