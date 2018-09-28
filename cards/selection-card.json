@@ -18,14 +18,9 @@
                                         "items": [
                                             {
                                                 "type": "TextBlock",
-                                                "text": "Auswahl",
+                                                "text": "Worum geht es in Ihrem Anliegen?",
                                                 "weight": "bolder",
                                                 "isSubtle": true
-                                            },
-                                            {
-                                                "type": "TextBlock",
-                                                "text": "Worum geht es in Ihrem Anliegen?",
-                                                "wrap": true
                                             }
                                         ]
                                     }
@@ -38,7 +33,7 @@
                     {
                         "type": "Action.Submit",
                         "title": "Storno",
-                        "speak": "<s>Storno</s>",
+                        "speak": "<s>Stornieren</s>",
                         "data": {
                             "type": "delete"
                         }
@@ -54,7 +49,7 @@
                     {
                         "type": "Action.Submit",
                         "title": "Foto",
-                        "speak": "<s>Foto</s>",
+                        "speak": "<s>Foto Upload</s>",
                         "data": {
                             "type": "picture"
                         }
