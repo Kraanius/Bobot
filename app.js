@@ -28,6 +28,7 @@ server.post('/api/messages', connector.listen());
 var inMemoryStorage = new builder.MemoryBotStorage();
 
 var bot = new builder.UniversalBot(connector, [
+
     function (session) {
         console.log('###1');
         session.send("Wilkommen beim B&O Helpdesk");
@@ -111,10 +112,12 @@ var bot = new builder.UniversalBot(connector, [
             // session.send(msg);   
 
             builder.Prompts.text(session, "Bitte geben Sie ihre Auftragsnummer ein.");
+
         },
         function (session, results) {
             console.log('###5');
             session.endDialogWithResult(results);
+            console.log("#####6");
         }
     ]);
 
@@ -129,6 +132,7 @@ var bot = new builder.UniversalBot(connector, [
             }
             var msg = new builder.Message(session).addAttachment(selectionCard);
             session.send(msg);    
+
         }
     );
 
