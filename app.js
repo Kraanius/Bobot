@@ -134,7 +134,6 @@ var bot = new builder.UniversalBot(connector, [
         }
     ]);
 
-
 function getJob(id) {
     var jobAuftrag = null;
         for (var key in data) {
