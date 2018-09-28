@@ -252,8 +252,8 @@ bot.dialog('takePicture', [
                     var topPrediction = jsonObj.predictions[0];
         
                     // make sure we only get confidence level with 0.80 and above. But you can adjust this depending on your need
-                    if (topPrediction.probability >= 0.80) {
-                        session.send('Ok, ich glaube, dass ist ${topPrediction.tagName}!');
+                    if (topPrediction.probability >= 0.70) {
+                        session.send(`Ich habe folgendes erkannt: ${topPrediction.tagName}`);
                     } else {
                         session.send('Hmm, ich weiß nicht, was das ist :(');
                     }
