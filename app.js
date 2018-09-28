@@ -38,8 +38,6 @@ var bot = new builder.UniversalBot(connector, [
     },
     function (session, results) {
         console.log('###2');
-        
-        
         if(job !== null) {
             var damageCard = {
                 "contentType": "application/vnd.microsoft.card.adaptive",
@@ -103,6 +101,7 @@ var bot = new builder.UniversalBot(connector, [
             }
             }
             var msg = new builder.Message(session).addAttachment(damageCard);
+            session.send(msg);
         }
    
         if(job !== null) {
@@ -130,7 +129,6 @@ var bot = new builder.UniversalBot(connector, [
                 session.send(msg);
                 session.beginDialog('askForID');
             }
-            
         }
     ]);
 
@@ -143,7 +141,6 @@ function getJob(id) {
                     if(job.TerminStatus !== 'storniert' ){
                         jobAuftrag = job
                     }
-                    
                 }
             }
         }
@@ -208,7 +205,6 @@ bot.dialog('moveAppointment', [
         }
         var msg = new builder.Message(session).addAttachment(dateCard);
         session.send(msg); 
-        
     }
 ]);
 
