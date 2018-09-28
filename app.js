@@ -242,24 +242,29 @@ bot.dialog('takePicture', [
                 .then(function (response) {
                     // Convert buffer into string then parse the JSON string to object
                     var jsonObj = JSON.parse(response.toString('utf8'));
+                    console.log("JSONOBJ: ###### " + JSON.stringify(jsonObj));
                     var topPrediction = jsonObj.predictions[0];
         
                     // make sure we only get confidence level with 0.80 and above. But you can adjust this depending on your need
                     if (topPrediction.probability >= 0.70) {
                         session.send(`Ich habe folgendes erkannt: ${topPrediction.tagName}`);
+                        var check = checkImage(topPrediction.tagName);
+                        if(check) {
+                            session.send(`Vielen Dank für das Foto. Ich habe erkannt, dass es zu Ihrem aufgenommenen Schaden mit der Auftragsnummer ${job.AuftragNr} passt.`);
+                        } else {
+                            session.send('Vielen Dank für das Foto.');
+                        }
                     } else {
-                        session.send('Hmm, ich weiß nicht, was das ist :(');
+                        session.send('Vielen Dank für das Foto.');
                     }
                 }).catch(function (error) {
-                    session.send('Oops, there\'s something wrong with processing the image. Please try again.');
+                    console.log(error);
+                    session.send('Es gab ein Fehler, bitte versuchen Sie es erneut.');
                 });
-        
         } else {
-            session.send('Ich habe leider kein Bild erhalten');
+            session.send('Ich habe leider kein Bild erhalten.');
         }
 }]);
-
-
 
 function changeDateInJson(date){
 for (var key in data) {
@@ -276,4 +281,13 @@ fs.writeFile('data.json', data3, (err) => {
     if (err) throw err;
 });
 return date;
+}
+
+function checkImage(imgName) {
+    let check = false;
+            if(job.Inventar === imgName) {
+                check = true;
+            }
+    console.log("#08976", check);
+    return check;
 }
