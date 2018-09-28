@@ -126,9 +126,7 @@ var bot = new builder.UniversalBot(connector, [
 
         },
         function (session, results) {
-            console.log('###5');
             session.endDialogWithResult(results);
-            console.log("#####6");
         }
     ]);
 
@@ -213,17 +211,15 @@ bot.dialog('moveAppointment', [
 ]);
 
 bot.dialog('askForMore',
-function (session) {  
-    var msg = new builder.Message(session).addAttachment(selectionCard);
-    session.send(msg);  
+function (session) {   
     if(session.message && session.message.value) {
         console.log('###7');
         console.log(session.message.value)
         processSubmitAction(session, session.message.value);
         return;
     }
-   
-
+    var msg = new builder.Message(session).addAttachment(selectionCard);
+    session.send(msg); 
 });
 
 function submitChangeDate(session, value){
