@@ -5,6 +5,7 @@ var nodemailer = require('nodemailer');
 const fs = require('fs');
 var data = require('./data.json');
 var utils = require('./utils.js');
+var moment = require('moment');
 var customVisionService = require('./customVisionService.js');
 var job = null;
 
@@ -176,8 +177,6 @@ function processSubmitAction(session, value) {
         case 'picture':
             session.beginDialog('takePicture');
             break;
-        case 'date':
-            session.beginDialog('changeDate');
         break;
     }
 }
@@ -219,14 +218,25 @@ function (session) {
 });
 
 function submitChangeDate(session, value) {
+    console.log("###10");
     date = value.DateVal
     console.log(value)
-    session.beginDialog('changeDate1',{date});
+    let correctDate = moment(date)
+    let today = moment()
+    console.log("vurrent", correctDate)
+    console.log("today", today)
+    if(correctDate.isAfter(today)) {
+        let foramtCorrect = moment(correctDate).format("DD-MM-YYYY");
+        session.beginDialog('changeDate1',{foramtCorrect});
+    } else {
+        session.send("Bitte gib ein gültiges Datum ein")
+    }
+    
 }
 
 bot.dialog('changeDate1',function (session, date) {
-    console.log('###6', date.date);    
-    let changedDate = changeDateInJson(date.date)
+    console.log('###6', date);    
+    let changedDate = changeDateInJson(date.foramtCorrect)
     session.send(`Ihr Termin wurde auf den ${changedDate} verschoben.`)
     session.endDialog();
 });
