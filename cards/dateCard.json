@@ -15,7 +15,7 @@
 			"type": "Input.Date",
 			"placeholder": "Due Date",
 			"id": "DateVal",
-			"value": "2017-09-20"
+			"value": "2018-10-20"
 		}
 	],
 	"actions": [
