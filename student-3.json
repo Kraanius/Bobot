@@ -1,0 +1,22 @@
+{
+  "AuftragNr": "10001",
+  "MieterMail": "mieter_940@bspmail.de",
+  "MieterName": "Mieter940",
+  "ObjPLZ": "53786",
+  "ObjStrasse": "Adolf-Saenger-Straße 8",
+  "Etage": "2. Obergeschoss | rechts",
+  "Raum": "Wohnung allgemein",
+  "Inventar": "Heizkörper",
+  "Schaden": "instandsetzen",
+  "SchadenBemerkungen": "",
+  "TerminDatum_absolut": "09-27-18",
+  "TerminDatum_relativ": "1",
+  "TerminZeit": "17:00",
+  "TerminBemerkungen": "",
+  "MonteurMail": "monteur_355@bspmail.de",
+  "Monteur": "Monteur355",
+  "LetzterMonteurStatus": "Anfahrt",
+  "MonteurStatusZeit_relativ": "-20",
+  "MonteurStatusZeit_absolut": "9/26/18 10:40",
+  "TerminStatus": "storniert"
+}

@@ -1,0 +1,31 @@
+{
+    "contentType": "application/vnd.microsoft.card.adaptive",
+	"content": {
+	"$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+	"type": "AdaptiveCard",
+	"version": "1.0",
+	"body": [
+		{
+			"type": "TextBlock",
+			"size": "medium",
+			"text": "Geben Sie ihren gewünschten Termin ein:",
+			"horizontalAlignment": "left"
+		},
+		{
+			"type": "Input.Date",
+			"placeholder": "Due Date",
+			"id": "DateVal",
+			"value": "2017-09-20"
+		}
+	],
+	"actions": [
+		{
+			"type": "Action.Submit",
+			"title": "Submit",
+			"data": {
+				"type": "date"
+			}
+		}
+	]
+}
+}
