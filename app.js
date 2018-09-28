@@ -4,7 +4,9 @@ var AdaptiveCards = require("adaptivecards");
 var nodemailer = require('nodemailer');
 const fs = require('fs');
 var data = require('./data.json');
-var job = null
+var utils = require('./utils.js');
+var customVisionService = require('./customVisionService.js');
+var job = null;
 
 var idCard = require("./cards/id-card.json");
 var selectionCard = require("./cards/selection-card.json");
@@ -32,13 +34,13 @@ var inMemoryStorage = new builder.MemoryBotStorage();
 var bot = new builder.UniversalBot(connector, [
 
     function (session) {
-        console.log('###1');
         session.send("Wilkommen beim B&O Helpdesk");
         session.beginDialog('askForID');
     },
     function (session, results) {
-        console.log('###2');
+        console.log('###2', job); 
         if(job !== null) {
+            console.log("###3")
             var damageCard = {
                 "contentType": "application/vnd.microsoft.card.adaptive",
                 "content": {
@@ -61,15 +63,15 @@ var bot = new builder.UniversalBot(connector, [
                                 "images": [
                                     {
                                         "type": "Image",
-                                        "url": "http://www.maler-wenzel.de/_res/metall/064_Heizkoerper/IMG_0967.jpg"
+                                        "url": job.Link1
                                     },
                                     {
                                         "type": "Image",
-                                        "url": "http://www.maler-wenzel.de/_res/metall/064_Heizkoerper/IMG_1008.jpg"
+                                        "url": job.Link2
                                     },
                                     {
                                         "type": "Image",
-                                        "url": "http://www.maler-wenzel.de/_res/metall/064_Heizkoerper/IMG_1007.jpg"
+                                        "url": job.Link3
                                     }
                                 ]
                             }
@@ -102,11 +104,10 @@ var bot = new builder.UniversalBot(connector, [
             }
             var msg = new builder.Message(session).addAttachment(damageCard);
             session.send(msg);
+            session.beginDialog('askForMore');
         }
    
-        if(job !== null) {
-            session.beginDialog('askForMore')
-        }
+            
         
     }
 ]).set('storage', inMemoryStorage); // Register in-memory storage 
@@ -170,12 +171,13 @@ function processSubmitAction(session, value) {
     switch (value.type) {
         case 'delete':
             session.beginDialog('deleteAppointment');
-        break;
+            break;
         case 'move':
             session.beginDialog('moveAppointment');
-        break;
+            break;
         case 'picture':
             session.beginDialog('takePicture');
+            break;
         case 'date':
             session.beginDialog('changeDate');
         break;
@@ -231,6 +233,38 @@ bot.dialog('changeDate1',function (session, date) {
     session.send(`Ihr Termin wurde auf den ${changedDate} verschoben.`)
     session.endDialog();
 });
+
+bot.dialog('takePicture', [
+    function (session) {
+        builder.Prompts.attachment(session, "Bitte laden Sie ihre Bilder hoch");
+    },
+    function(session, result) {
+        if(utils.hasImageAttachment(session)){
+            var stream = utils.getImageStreamFromMessage(session.message); 
+            customVisionService.predict(stream)
+                .then(function (response) {
+                    // Convert buffer into string then parse the JSON string to object
+                    var jsonObj = JSON.parse(response.toString('utf8'));
+                    console.log("JSONOBJ: ###### " + JSON.stringify(jsonObj));
+                    var topPrediction = jsonObj.predictions[0];
+        
+                    // make sure we only get confidence level with 0.80 and above. But you can adjust this depending on your need
+                    if (topPrediction.probability >= 0.70) {
+                        session.send(`Ich habe folgendes erkannt: ${topPrediction.tagName}`);
+                    } else {
+                        session.send('Hmm, ich weiß nicht, was das ist :(');
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                    session.send('Oops, there\'s something wrong with processing the image. Please try again.');
+                });
+        
+        } else {
+            session.send('Ich habe leider kein Bild erhalten');
+        }
+}]);
+
+
 
 function changeDateInJson(date){
 for (var key in data) {
