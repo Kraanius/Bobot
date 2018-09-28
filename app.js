@@ -179,7 +179,7 @@ bot.dialog('deleteAppointment', [
             deleteJob(job.AuftragNr)
             session.send(`Ihr Termin mit der Auftragsnummer ${job.AuftragNr} wurde aus unserem System gelöscht.`);
         } else {
-            session.send("Termin konnte leider nicht gelöscht werden!");
+            session.send("Termin wurde nicht gelöscht.");
             session.beginDialog('askForMore');
         }     
         session.endDialog();

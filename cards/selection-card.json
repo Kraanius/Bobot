@@ -33,14 +33,6 @@
                 "actions": [
                     {
                         "type": "Action.Submit",
-                        "title": "Storno",
-                        "speak": "<s>Stornieren</s>",
-                        "data": {
-                            "type": "delete"
-                        }
-                    },
-                    {
-                        "type": "Action.Submit",
                         "title": "Verschieben",
                         "speak": "<s>Verschieben</s>",
                         "data": {
@@ -49,10 +41,18 @@
                     },
                     {
                         "type": "Action.Submit",
-                        "title": "Foto",
-                        "speak": "<s>Foto Upload</s>",
+                        "title": "Foto hochladen",
+                        "speak": "<s>Foto hochladen</s>",
                         "data": {
                             "type": "picture"
+                        }
+                    },
+                    {
+                        "type": "Action.Submit",
+                        "title": "Stornieren",
+                        "speak": "<s>Stornieren</s>",
+                        "data": {
+                            "type": "delete"
                         }
                     }
                 ]
