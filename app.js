@@ -4,7 +4,7 @@ var AdaptiveCards = require("adaptivecards");
 var nodemailer = require('nodemailer');
 const fs = require('fs');
 var data = require('./data.json');
-var job;
+var job = null
 
 var idCard = require("./cards/id-card.json");
 var selectionCard = require("./cards/selection-card.json");
@@ -38,9 +38,8 @@ var bot = new builder.UniversalBot(connector, [
     },
     function (session, results) {
         console.log('###2');
-        session.dialogData.ID = results.response;
-        job = getJob(`${session.dialogData.ID}`);
-        var msg = "Wir können diesen Auftrag leider nicht finden."
+        
+        
         if(job !== null) {
             var damageCard = {
                 "contentType": "application/vnd.microsoft.card.adaptive",
@@ -105,15 +104,12 @@ var bot = new builder.UniversalBot(connector, [
             }
             var msg = new builder.Message(session).addAttachment(damageCard);
         }
-        
-        session.send(msg);   
+   
         if(job !== null) {
             session.beginDialog('askForMore')
-        } else {
-            session.beginDialog('askForID')
         }
         
-    },
+    }
 ]).set('storage', inMemoryStorage); // Register in-memory storage 
 
     bot.dialog('askForID', [
@@ -121,15 +117,22 @@ var bot = new builder.UniversalBot(connector, [
             console.log('###4');
             // var msg = new builder.Message(session).addAttachment(idCard);
             // session.send(msg);   
-
             builder.Prompts.number(session, "Bitte geben Sie ihre Auftragsnummer ein.");
-
         },
         function (session, results) {
-            session.endDialogWithResult(results);
+            console.log('###5');
+            session.dialogData.ID = results.response;
+            job = getJob(`${session.dialogData.ID}`);
+            if(job !== null){
+                session.endDialogWithResult(results);
+            } else {
+                var msg = "Wir können diesen Auftrag leider nicht finden.";
+                session.send(msg);
+                session.beginDialog('askForID');
+            }
+            
         }
     ]);
-
 
 
 function getJob(id) {
