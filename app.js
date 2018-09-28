@@ -109,7 +109,6 @@ var bot = new builder.UniversalBot(connector, [
         
     }
 ]).set('storage', inMemoryStorage); // Register in-memory storage 
-
     bot.dialog('askForID', [
         function (session) {
             // var msg = new builder.Message(session).addAttachment(idCard);
@@ -122,7 +121,7 @@ var bot = new builder.UniversalBot(connector, [
             if(job !== null){
                 session.endDialogWithResult(results);
             } else {
-                var msg = "Wir können diesen Auftrag leider nicht finden.";
+                var msg = "Wir konnten diesen Auftrag leider nicht finden.";
                 session.send(msg);
                 session.beginDialog('askForID');
             }
@@ -184,7 +183,7 @@ bot.dialog('deleteAppointment', [
             deleteJob(job.AuftragNr)
             session.send(`Ihr Termin mit der Auftragsnummer ${job.AuftragNr} wurde aus unserem System gelöscht.`);
         } else {
-            session.send("Termin wurde nicht gelöscht!");
+            session.send("Termin konnte leider nicht gelöscht werden!");
             session.beginDialog('askForMore');
         }     
         session.endDialog();
