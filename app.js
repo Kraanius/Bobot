@@ -188,9 +188,13 @@ bot.dialog('deleteAppointment', [
 
 bot.dialog('moveAppointment', [
     function (session) {
-        if(session.message && session.message.value.type === "date") {
-            submitChangeDate(session, session.message.value)
-            return;
+        if(session.message.value !== undefined) {
+            if(session.message && session.message.value.type === "date") {
+                submitChangeDate(session, session.message.value)
+                return;
+            } 
+        } else {
+            var message = session.send("Bitte geben Sie ein valides Datum in die Karte ein.")
         }
         var msg = new builder.Message(session).addAttachment(dateCard);
         session.send(msg); 
@@ -208,7 +212,6 @@ function (session) {
 });
 
 function submitChangeDate(session, value) {
-    console.log("###10");
     date = value.DateVal
     console.log(value)
     let correctDate = moment(date)
@@ -219,7 +222,7 @@ function submitChangeDate(session, value) {
         let foramtCorrect = moment(correctDate).format("DD-MM-YYYY");
         session.beginDialog('changeDate1',{foramtCorrect});
     } else {
-        session.send("Bitte gib ein gültiges Datum ein")
+        session.send("Bitte geben Sie ein gültiges Datum ein.") 
     }
     
 }
@@ -264,6 +267,7 @@ bot.dialog('takePicture', [
         } else {
             session.send('Ich habe leider kein Bild erhalten.');
         }
+        session.endDialog();
 }]);
 
 function changeDateInJson(date){
