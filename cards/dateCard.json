@@ -7,7 +7,7 @@
 	"body": [
 		{
 			"type": "TextBlock",
-			"text": "Geben Sie ihren gewünschten Termin ein:",
+			"text": "Geben Sie Ihren gewünschten Termin ein:",
 			"horizontalAlignment": "left",
 			"wrap": true
 		},
@@ -21,7 +21,7 @@
 	"actions": [
 		{
 			"type": "Action.Submit",
-			"title": "Submit",
+			"title": "Eingabe",
 			"data": {
 				"type": "date"
 			}

@@ -39,6 +39,9 @@ var bot = new builder.UniversalBot(connector, [
     },
     function (session, results) {
         if(job !== null) {
+            if(job.TerminBemerkungen.length > 1){
+                var bemerkungen = job.TerminBemerkungen.join(', ')
+            }
             var damageCard = {
                 "contentType": "application/vnd.microsoft.card.adaptive",
                 "content": {
@@ -88,6 +91,10 @@ var bot = new builder.UniversalBot(connector, [
                                     {
                                         "title": "Schaden:",
                                         "value": job.Inventar + " " + job.Schaden
+                                    },
+                                    {
+                                        "title": "Details:",
+                                        "value": bemerkungen
                                     }
                                 ]
                             }
@@ -149,8 +156,8 @@ function deleteJob(id) {
             }
         }
     }
-    let data2 = JSON.stringify(data, null, 2);
-    fs.writeFile('data.json', data2, (err) => {  
+    let dataNew = JSON.stringify(data, null, 2);
+    fs.writeFile('data.json', dataNew, (err) => {  
         if (err) throw err;
     });
 }
@@ -186,6 +193,27 @@ bot.dialog('deleteAppointment', [
     }
 ]);
 
+bot.dialog('imageComment', [
+    function (session) {
+        builder.Prompts.confirm(session, "Möchten Sie noch eine Bemerkung zu dem Foto hinzufügen");
+    }, function(session, result) {
+        if(result.response) {
+            builder.Prompts.text(session, "Bitte geben Sie ihre Bemerkung ein.");
+        } else {
+            session.send("Ich haben keine weitere Bemerkung aufgenommen. Vielen Dank");
+            session.endDialog();
+        }     
+    }, function(session, result) {
+        job.TerminBemerkungen.push(result.response);
+        let dataNew = JSON.stringify(data, null, 2);
+        fs.writeFile('data.json', dataNew, (err) => {  
+            if (err) throw err;
+        });
+        session.send(`Wir haben folgende Bemerkung aufgenommen: ${result.response}. Vielen Dank.`)
+        session.endDialog();
+    }
+]);
+
 bot.dialog('moveAppointment', [
     function (session) {
         if(session.message.value !== undefined) {
@@ -213,11 +241,8 @@ function (session) {
 
 function submitChangeDate(session, value) {
     date = value.DateVal
-    console.log(value)
     let correctDate = moment(date)
     let today = moment()
-    console.log("vurrent", correctDate)
-    console.log("today", today)
     if(correctDate.isAfter(today)) {
         let foramtCorrect = moment(correctDate).format("DD-MM-YYYY");
         session.beginDialog('changeDate1',{foramtCorrect});
@@ -228,7 +253,6 @@ function submitChangeDate(session, value) {
 }
 
 bot.dialog('changeDate1',function (session, date) {
-    console.log('###6', date);    
     let changedDate = changeDateInJson(date.foramtCorrect)
     session.send(`Ihr Termin wurde auf den ${changedDate} verschoben.`)
     session.endDialog();
@@ -236,7 +260,7 @@ bot.dialog('changeDate1',function (session, date) {
 
 bot.dialog('takePicture', [
     function (session) {
-        builder.Prompts.attachment(session, "Bitte laden Sie ihre Bilder hoch");
+        builder.Prompts.attachment(session, "Bitte laden Sie ihr Bild hoch.");
     },
     function(session, result) {
         if(utils.hasImageAttachment(session)){
@@ -245,20 +269,20 @@ bot.dialog('takePicture', [
                 .then(function (response) {
                     // Convert buffer into string then parse the JSON string to object
                     var jsonObj = JSON.parse(response.toString('utf8'));
-                    console.log("JSONOBJ: ###### " + JSON.stringify(jsonObj));
                     var topPrediction = jsonObj.predictions[0];
-        
                     // make sure we only get confidence level with 0.80 and above. But you can adjust this depending on your need
                     if (topPrediction.probability >= 0.70) {
                         session.send(`Ich habe folgendes erkannt: ${topPrediction.tagName}`);
                         var check = checkImage(topPrediction.tagName);
                         if(check) {
                             session.send(`Vielen Dank für das Foto. Ich habe erkannt, dass es zu Ihrem aufgenommenen Schaden mit der Auftragsnummer ${job.AuftragNr} passt.`);
+                            session.beginDialog('imageComment');
                         } else {
                             session.send('Vielen Dank für das Foto.');
                         }
                     } else {
                         session.send('Vielen Dank für das Foto.');
+
                     }
                 }).catch(function (error) {
                     console.log(error);
@@ -292,6 +316,5 @@ function checkImage(imgName) {
             if(job.Inventar === imgName) {
                 check = true;
             }
-    console.log("#08976", check);
     return check;
 }
