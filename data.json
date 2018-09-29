@@ -10,7 +10,7 @@
     "Inventar": "Heizkörper",
     "Schaden": "instandsetzen",
     "SchadenBemerkungen": "",
-    "TerminDatum_absolut": "20-10-2019",
+    "TerminDatum_absolut": "20-10-2018",
     "TerminDatum_relativ": "1",
     "TerminZeit": "17:00",
     "TerminBemerkungen": [
@@ -36,7 +36,7 @@
     "TerminDatum_relativ": "8",
     "TerminZeit": "17:00",
     "TerminBemerkungen": [
-     "Bitte klopfen, da Klingel defekt"
+      "Bitte klopfen, da Klingel defekt"
     ],
     "TerminStatus": "Termin_vereinbart",
     "Link1": "https://www.sorpetaler.de/wp-content/uploads/2016/07/holz-alu-balkontuer-660x525.jpg",
@@ -147,7 +147,9 @@
     "TerminDatum_relativ": "1",
     "TerminZeit": "10:00",
     "TerminBemerkungen": [
-      "Beim Nachbarn klingeln", "Zugang nur über Garten" ],
+      "Beim Nachbarn klingeln",
+      "Zugang nur über Garten"
+    ],
     "TerminStatus": "Termin_vereinbart",
     "Link1": "https://images.obi.de/product/DE/1500x1500/589631_1.jpg",
     "Link2": "https://www.tikamoon.de/zoom-waschbecken-aus-marmor-ibyza-grey-1685.jpg",
@@ -212,7 +214,9 @@
     "TerminDatum_absolut": "14-10-2018",
     "TerminDatum_relativ": "30. November 2018",
     "TerminZeit": "1",
-    "TerminBemerkungen": ["Altbauwohnung"],
+    "TerminBemerkungen": [
+      "Altbauwohnung"
+    ],
     "TerminStatus": "Termin_vereinbart",
     "Link1": "http://www.heizkesselhalle.de/WebRoot/Store16/Shops/63417571/56E3/E330/C636/C5AB/6DA9/C0A8/2ABB/183C/EPME0.jpg",
     "Link2": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMuPQcY5covNnlNseM3LDxTeYp1BD_-R55qkuG-JiW4VKEphxA",
