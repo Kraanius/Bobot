@@ -82,24 +82,28 @@ var bot = new builder.UniversalBot(connector, [
                                     {
                                         "type": "TextBlock",
                                         "wrap": "false",
+                                        "size": "small",
                                         "weight": "bolder",
                                         "text": "Name:"
                                     },
                                     {
                                         "type": "TextBlock",
                                         "wrap": "false",
+                                        "size": "small",
                                         "weight": "bolder",
                                         "text": "Datum:"
                                     },
                                     {
                                         "type": "TextBlock",
                                         "wrap": "false",
+                                        "size": "small",
                                         "weight": "bolder",
                                         "text": "Schaden:"
                                     },
                                     {
                                         "type": "TextBlock",
                                         "wrap": "false",
+                                        "size": "small",
                                         "weight": "bolder",
                                         "text": "Details:"
                                     },
