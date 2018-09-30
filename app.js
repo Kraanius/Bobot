@@ -77,34 +77,30 @@ var bot = new builder.UniversalBot(connector, [
                         "columns": [
                             {
                                 "type": "Column",
-                                "width": "50",
-                                "size": "50",
+                                "width": "30",
+                                "size": "30",
                                 "items": [
                                     {
                                         "type": "TextBlock",
                                         "wrap": "false",
-                                        "size": "small",
                                         "weight": "bolder",
                                         "text": "Name:"
                                     },
                                     {
                                         "type": "TextBlock",
                                         "wrap": "false",
-                                        "size": "small",
                                         "weight": "bolder",
                                         "text": "Datum:"
                                     },
                                     {
                                         "type": "TextBlock",
                                         "wrap": "false",
-                                        "size": "small",
                                         "weight": "bolder",
                                         "text": "Schaden:"
                                     },
                                     {
                                         "type": "TextBlock",
                                         "wrap": "false",
-                                        "size": "small",
                                         "weight": "bolder",
                                         "text": "Details:"
                                     },
@@ -112,8 +108,8 @@ var bot = new builder.UniversalBot(connector, [
                             },
                             {
                                 "type": "Column",
-                                "width": "50",
-                                "size": "50",
+                                "width": "70",
+                                "size": "70",
                                 "items": [
                                     {
                                         "type": "TextBlock",
