@@ -80,14 +80,17 @@ var bot = new builder.UniversalBot(connector, [
                                 "facts": [
                                     {
                                         "title": "Name:",
+                                        "wrap": false,
                                         "value": job.MieterName
                                     },
                                     {
                                         "title": "Datum:",
+                                        "wrap": false,
                                         "value": job.TerminDatum_absolut
                                     },
                                     {
                                         "title": "Schaden:",
+                                        "wrap": false,
                                         "value": job.Inventar + " " + job.Schaden
                                     },
                                     {
