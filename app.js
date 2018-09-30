@@ -1,7 +1,6 @@
 var restify = require('restify');
 var builder = require('botbuilder');
 var AdaptiveCards = require("adaptivecards");
-var nodemailer = require('nodemailer');
 const fs = require('fs');
 var data = require('./data.json');
 var utils = require('./utils.js');
