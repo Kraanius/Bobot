@@ -77,7 +77,7 @@ var bot = new builder.UniversalBot(connector, [
                         "columns": [
                             {
                                 "type": "Column",
-                                "width": "stretch",
+                                "width": "100",
                                 "items": [
                                     {
                                         "type": "TextBlock",
