@@ -32,7 +32,6 @@ server.post('/api/messages', connector.listen());
 var inMemoryStorage = new builder.MemoryBotStorage();
 
 var bot = new builder.UniversalBot(connector, [
-
     function (session) {
         session.send("Willkommen beim B&O Helpdesk");
         session.beginDialog('askForID');
@@ -107,15 +106,10 @@ var bot = new builder.UniversalBot(connector, [
             session.send(msg);
             session.beginDialog('askForMore');
         }
-   
-            
-        
     }
 ]).set('storage', inMemoryStorage); // Register in-memory storage 
     bot.dialog('askForID', [
         function (session) {
-            // var msg = new builder.Message(session).addAttachment(idCard);
-            // session.send(msg);   
             builder.Prompts.number(session, "Bitte geben Sie ihre Auftragsnummer ein.");
         },
         function (session, results) {
@@ -133,17 +127,17 @@ var bot = new builder.UniversalBot(connector, [
 
 function getJob(id) {
     var jobAuftrag = null;
-        for (var key in data) {
-            if (data.hasOwnProperty(key)) {
-                var job = data[key]
-                if(job.AuftragNr === id) {
-                    if(job.TerminStatus !== 'storniert' ){
-                        jobAuftrag = job
-                    }
+    for (var key in data) {
+        if (data.hasOwnProperty(key)) {
+            var job = data[key]
+            if(job.AuftragNr === id) {
+                if(job.TerminStatus !== 'storniert' ){
+                    jobAuftrag = job
                 }
             }
         }
-        return jobAuftrag;
+    }
+    return jobAuftrag;
 }
 
 function deleteJob(id) {
@@ -162,7 +156,6 @@ function deleteJob(id) {
     });
 }
 
-
 function processSubmitAction(session, value) {
     switch (value.type) {
         case 'delete':
@@ -174,7 +167,6 @@ function processSubmitAction(session, value) {
         case 'picture':
             session.beginDialog('takePicture');
             break;
-        break;
     }
 }
 
@@ -249,7 +241,6 @@ function submitChangeDate(session, value) {
     } else {
         session.send("Bitte geben Sie ein gültiges Datum ein.") 
     }
-    
 }
 
 bot.dialog('changeDate1',function (session, date) {
@@ -282,7 +273,6 @@ bot.dialog('takePicture', [
                         }
                     } else {
                         session.send('Vielen Dank für das Foto.');
-
                     }
                 }).catch(function (error) {
                     console.log(error);
@@ -304,8 +294,8 @@ for (var key in data) {
     }
 }
 
-let data3 = JSON.stringify(data, null, 2);
-fs.writeFile('data.json', data3, (err) => {  
+let dataNew = JSON.stringify(data, null, 2);
+fs.writeFile('data.json', dataNew, (err) => {  
     if (err) throw err;
 });
 return date;
