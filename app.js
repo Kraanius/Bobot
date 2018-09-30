@@ -77,7 +77,7 @@ var bot = new builder.UniversalBot(connector, [
                         "columns": [
                             {
                                 "type": "Column",
-                                "width": "auto",
+                                "width": "10",
                                 "items": [
                                     {
                                         "type": "TextBlock",
@@ -107,21 +107,26 @@ var bot = new builder.UniversalBot(connector, [
                             },
                             {
                                 "type": "Column",
+                                "width": "40",
                                 "items": [
                                     {
                                         "type": "TextBlock",
+                                        "wrap": "true",
                                         "text": job.MieterName
                                     },
                                     {
                                         "type": "TextBlock",
+                                        "wrap": "true",
                                         "text": job.TerminDatum_absolut
                                     },
                                     {
                                         "type": "TextBlock",
+                                        "wrap": "true",
                                         "text": job.Inventar + " " + job.Schaden
                                     },
                                     {
                                         "type": "TextBlock",
+                                        "wrap": "true",
                                         "text": bemerkungen
                                     },
                                 ]
