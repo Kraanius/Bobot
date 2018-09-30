@@ -73,32 +73,59 @@ var bot = new builder.UniversalBot(connector, [
                         ]
                     },
                     {
-                        "type": "Container",
-                        "items": [
+                        "type": "ColumnSet",
+                        "columns": [
                             {
-                                "type": "FactSet",
-                                "facts": [
+                                "type": "Column",
+                                "width": "auto",
+                                "items": [
                                     {
-                                        "title": "Name:",
-                                        "wrap": false,
-                                        "value": job.MieterName
+                                        "type": "TextBlock",
+                                        "wrap": "false",
+                                        "weight": "bolder",
+                                        "text": "Name:"
                                     },
                                     {
-                                        "title": "Datum:",
-                                        "wrap": false,
-                                        "value": job.TerminDatum_absolut
+                                        "type": "TextBlock",
+                                        "wrap": "false",
+                                        "weight": "bolder",
+                                        "text": "Datum:"
                                     },
                                     {
-                                        "title": "Schaden:",
-                                        "wrap": false,
-                                        "value": job.Inventar + " " + job.Schaden
+                                        "type": "TextBlock",
+                                        "wrap": "false",
+                                        "weight": "bolder",
+                                        "text": "Schaden:"
                                     },
                                     {
-                                        "title": "Details:",
-                                        "value": bemerkungen
-                                    }
+                                        "type": "TextBlock",
+                                        "wrap": "false",
+                                        "weight": "bolder",
+                                        "text": "Details:"
+                                    },
                                 ]
-                            }
+                            },
+                            {
+                                "type": "Column",
+                                "items": [
+                                    {
+                                        "type": "TextBlock",
+                                        "text": job.MieterName
+                                    },
+                                    {
+                                        "type": "TextBlock",
+                                        "text": job.TerminDatum_absolut
+                                    },
+                                    {
+                                        "type": "TextBlock",
+                                        "text": job.Inventar + " " + job.Schaden
+                                    },
+                                    {
+                                        "type": "TextBlock",
+                                        "text": bemerkungen
+                                    },
+                                ]
+                            },
                         ]
                     }
                 ]
